@@ -1,4 +1,7 @@
-package com.dtian.fixinjector;
+package com.dtian.fixinjector.core;
+
+import com.dtian.fixinjector.config.InjectorConfig;
+import com.dtian.fixinjector.model.Message;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -8,14 +11,18 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SocketInjector {
-    private final Configuration config;
+/**
+ * Handles injection of messages into TCP sockets.
+ * Supports both individual message injection and batching.
+ */
+public class MessageInjector {
+    private final InjectorConfig config;
     private SocketChannel socketChannel;
     private final AtomicBoolean connected = new AtomicBoolean(false);
-    private final BlockingQueue<FixMessage> messageQueue;
+    private final BlockingQueue<Message> messageQueue;
     private final Object writeLock = new Object();
 
-    public SocketInjector(Configuration config) {
+    public MessageInjector(InjectorConfig config) {
         this.config = config;
         this.messageQueue = config.isBatchingEnabled() ? 
             new ArrayBlockingQueue<>(config.getBatchSize() * 2) : null;
@@ -42,7 +49,7 @@ public class SocketInjector {
         }
     }
 
-    public void inject(FixMessage message) throws IOException {
+    public void inject(Message message) throws IOException {
         if (!connected.get()) {
             throw new IOException("Socket not connected");
         }
@@ -62,7 +69,7 @@ public class SocketInjector {
         }
     }
 
-    private void sendMessage(FixMessage message) throws IOException {
+    private void sendMessage(Message message) throws IOException {
         synchronized (writeLock) {
             ByteBuffer buffer = message.getByteBuffer();
             
@@ -86,7 +93,7 @@ public class SocketInjector {
             ByteBuffer batchBuffer = ByteBuffer.allocateDirect(batchSize * 1024);
 
             for (int i = 0; i < batchSize; i++) {
-                FixMessage message = messageQueue.poll();
+                Message message = messageQueue.poll();
                 if (message == null) break;
 
                 byte[] messageBytes = message.getMessageBytes();

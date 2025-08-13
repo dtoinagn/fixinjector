@@ -1,20 +1,19 @@
-package com.dtian.fixinjector;
+package com.dtian.fixinjector.model;
 
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FixMessage {
+/**
+ * FIX protocol message implementation
+ */
+public class FixMessage extends Message {
     private static final char SOH = '\001';
     private final String rawMessage;
-    private final byte[] messageBytes;
     private final Map<Integer, String> tags;
-    private final int length;
 
     public FixMessage(String rawMessage) {
+        super(rawMessage.getBytes());
         this.rawMessage = rawMessage;
-        this.messageBytes = rawMessage.getBytes();
-        this.length = messageBytes.length;
         this.tags = new HashMap<>();
         parseMessage();
     }
@@ -39,18 +38,6 @@ public class FixMessage {
 
     public String getRawMessage() {
         return rawMessage;
-    }
-
-    public byte[] getMessageBytes() {
-        return messageBytes.clone();
-    }
-
-    public ByteBuffer getByteBuffer() {
-        return ByteBuffer.wrap(messageBytes);
-    }
-
-    public int getLength() {
-        return length;
     }
 
     public String getTag(int tagNumber) {
@@ -81,8 +68,19 @@ public class FixMessage {
         return getTag(52);
     }
 
+    @Override
     public boolean isValid() {
         return hasTag(8) && hasTag(9) && hasTag(35) && hasTag(49) && hasTag(56);
+    }
+
+    @Override
+    public String getMessageType() {
+        return getMsgType();
+    }
+
+    @Override
+    public String getProtocol() {
+        return "FIX";
     }
 
     public String getBeginString() {
@@ -104,7 +102,7 @@ public class FixMessage {
                 ", sender=" + getSenderCompID() +
                 ", target=" + getTargetCompID() +
                 ", seqNum=" + getMsgSeqNum() +
-                ", length=" + length +
+                ", length=" + getLength() +
                 '}';
     }
 

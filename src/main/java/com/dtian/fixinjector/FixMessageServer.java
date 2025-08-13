@@ -1,5 +1,8 @@
 package com.dtian.fixinjector;
 
+import com.dtian.fixinjector.config.InjectorConfig;
+import com.dtian.fixinjector.model.FixMessage;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -18,7 +21,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FixMessageServer {
-    private final Configuration config;
+    private final InjectorConfig config;
     private final AtomicLong messageCount = new AtomicLong(0);
     private final AtomicLong bytesReceived = new AtomicLong(0);
     private volatile boolean running = true;
@@ -26,7 +29,7 @@ public class FixMessageServer {
     private Selector selector;
     private final Path outputDirectory;
 
-    public FixMessageServer(Configuration config) throws IOException {
+    public FixMessageServer(InjectorConfig config) throws IOException {
         this.config = config;
         this.outputDirectory = Paths.get(config.getOutputDirectory());
         
@@ -39,7 +42,7 @@ public class FixMessageServer {
     public static void main(String[] args) {
         try {
             System.setProperty("server.mode", "true");
-            Configuration config = Configuration.load(args);
+            InjectorConfig config = com.dtian.fixinjector.config.ConfigurationManager.load(args);
             FixMessageServer server = new FixMessageServer(config);
             
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

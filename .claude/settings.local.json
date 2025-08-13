@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(java:*)",
-      "Bash(mvn clean:*)"
+      "Bash(mvn clean:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
