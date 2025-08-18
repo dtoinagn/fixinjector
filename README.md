@@ -51,11 +51,28 @@ This is a java console application that reads a large volume of sample FIX messa
 - Minimize synchronization overhead
 - Consider using 'Disruptor' or custom ring buffer for ultra-low latency
 
-### Testing
+### Unit Testing
 
+#### Test Frameworks
+
+- JUnit Jupiter 5.10.2 (main testing framework)
+- Mockito 5.11.0 (mocking framework)
+- Maven Surefire Plugin 3.2.5 (test execution)
+- Covers key functionality including edge cases, error handling, and concurrent access
+- Tests validate configuration defaults against application.properties
+
+#### Test Quality Features:
+
+- Comprehensive edge case coverage
+- Thread safety testing for metrics
+- File I/O testing with temporary directories
+- Error condition validation
+- Mock configurations for isolated testing
 - Simulate socket server to verify message delivery
 - Measure injection latency under load
-- Validate FIX message integrity (optional)
+- Validate FIX message integrity (TODO)
+
+### Local Integration Testing
 
 #### Test with a dummy socket server locally
 
@@ -81,16 +98,18 @@ Created console-runnable application with socket server. Here's how to use it:
   java -jar target/demo-1.0-SNAPSHOT.jar --file c:\share\data\ --recursive
 
 ```
+
 #### Test Results
+
 1. With console printing of debugging messages
-Socket connection closed
-Performance metrics stopped at: 2025-08-12T21:23:43.607400700Z
-Metrics - Messages: 4250 (375/s current, 688/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:06
-Metrics - Messages: 4250 (0/s current, 592/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:07
-Metrics - Messages: 4250 (0/s current, 519/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:08
-Metrics - Messages: 4250 (0/s current, 462/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:09
-Metrics - Messages: 4250 (0/s current, 416/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:10
-Injection completed.
+   Socket connection closed
+   Performance metrics stopped at: 2025-08-12T21:23:43.607400700Z
+   Metrics - Messages: 4250 (375/s current, 688/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:06
+   Metrics - Messages: 4250 (0/s current, 592/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:07
+   Metrics - Messages: 4250 (0/s current, 519/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:08
+   Metrics - Messages: 4250 (0/s current, 462/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:09
+   Metrics - Messages: 4250 (0/s current, 416/s avg) | Latency: avg=0.18ms, min=0.01ms, max=14.06ms | Data: 0.00 MB (0.00 MB/s) | Errors: 0 | Runtime: 0:00:10
+   Injection completed.
 
 === FINAL PERFORMANCE REPORT ===
 Total runtime: 10.451 sec
@@ -99,28 +118,26 @@ Data processed: 0.00 MB
 Average throughput: 406.66 messages/sec
 Average data rate: 0.00 MB/sec
 Latency statistics:
-  - Average: 0.18 ms
-  - Minimum: 0.01 ms
-  - Maximum: 14.06 ms
-Total errors: 0
-Success rate: 100.00%
-================================
+
+- Average: 0.18 ms
+- Minimum: 0.01 ms
+- Maximum: 14.06 ms
+  Total errors: 0
+  Success rate: 100.00%
 
 Socket connection closed
 Performance metrics stopped at: 2025-08-12T21:28:34.087253900Z
 Injection completed.
 
-2. Console printing of debug info commented out.
-=== FINAL PERFORMANCE REPORT ===
-Total runtime: 5.539 sec
-Messages processed: 4250
-Data processed: 0.00 MB
-Average throughput: 767.29 messages/sec
-Average data rate: 0.00 MB/sec
-Latency statistics:
-  - Average: 0.03 ms
-  - Minimum: 0.01 ms
-  - Maximum: 1.48 ms
-Total errors: 0
-Success rate: 100.00%
-================================
+1. Console printing of debug info commented out.
+   === FINAL PERFORMANCE REPORT ===
+   Total runtime: 5.539 sec
+   Messages processed: 4250
+   Data processed: 0.00 MB
+   Average throughput: 767.29 messages/sec
+   Average data rate: 0.00 MB/sec
+   Latency statistics:
+
+- Average: 0.03 ms
+- Minimum: 0.01 ms
+- Maximum: 1.48 ms, Total errors: 0, Success rate: 100.00%
