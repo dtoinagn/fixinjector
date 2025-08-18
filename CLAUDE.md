@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Java console application that reads messages from files and injects them into TCP sockets for high-throughput, low-latency benchmarking. The application supports multiple message protocols (FIX, BYTE_HEADER_XML) and uses Java 17 with Maven for build management.
+This is a Java console application that reads messages from files and injects them into TCP sockets for high-throughput, low-latency benchmarking. The application supports multiple message protocols (FIX, BYTE_HEADER_XML) and is configured for Java 21 with Maven for build management. See `JAVA_21_SETUP.md` for Java 21 configuration instructions.
 
 ## Common Commands
 
